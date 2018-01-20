@@ -1,18 +1,19 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# author: Jolly_Son
+# Author: Jolly_Son
+# 功能：主程序，包括按键处理等
 
 import tkinter as tk
 import maze_room
 import maze_game
 import maze_graphics
 
-# about full screen on my development laptop
-x = 10 # height in rooms   50
-y = 10 # width in rooms    90
+# 这个是设置迷宫规模
+x = 10 # 迷宫的高
+y = 20 # 迷宫的宽
 
 class Application(tk.Frame):
-    # The application class
+    # 这个是应用类
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
         self.x = x
@@ -37,22 +38,22 @@ class Application(tk.Frame):
         return field
 
     def addHandler(self, field):
-        # Adds a key handler
+        # 添加一个按键处理
         seq = '<Any-KeyPress>'
         field.bind_all(sequence=seq, func=self.handleKey, add=None)
         
     def initGame(self):
-        # Sets up the maze itself
+        # 设置游戏初始化
         self.game.clearGame()
         self.game.drawGame()
 
     def stopGame(self):
-        # Kills the application
+        # 杀死这个应用
         self.done = True
         self.quit()
 
     def handleKey(self, event):
-        # Handler for key presses
+        # 按键处理程序
         if False:
             print("handleKey: ", event.keysym, event.keycode, event.keysym_num)
         mv = None
@@ -91,17 +92,25 @@ class Application(tk.Frame):
             self.stopGame()
             
     def playGame(self):
-        # Starts the game
+        # 开始游戏
         self.initGame()
         self.addHandler(self.field)
         # return in App mainloop to play
         
-#print("Sokkelo")
-#y = int(input("Anna leveys: "))
-#x = int(input("Anna korkeus: "))
+# 打印测试
+# y = int(input("设定迷宫的宽: "))
+# x = int(input("设定迷宫的高: "))
+
+
+
 root = tk.Tk() # root.destroy() needs this
 app = Application()
-app.master.title('Sokkelo - Maze')
+app.master.title('Maze-迷宫小游戏 v1.0')
 app.mainloop()
-#print("Game over")
-root.destroy() # some IDEs need this
+
+# 打印测试
+print("Game over")
+
+
+
+root.destroy() # 某些 IDEs 需要这个

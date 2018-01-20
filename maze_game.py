@@ -1,4 +1,8 @@
-# The maze game logic
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# Author: Jolly_Son
+# 功能：
+
 import tkinter as tk
 from tkinter import messagebox
 import random
