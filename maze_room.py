@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # Author: Jolly_Son
 # 功能：迷宫的小格子
+
 U_WALL = 1
 R_WALL = 2
 D_WALL = 4

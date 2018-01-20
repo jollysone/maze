@@ -7,15 +7,15 @@ import tkinter as tk
 # 这个是像素
 
 # 一些颜色
-BGC = '#ff0ff0ff0'
-FGC = '#000000000'
-WKC = '#000fc0fc0'
-VSC = '#0000000cf'
-RRR = '#fff000000'
-GGG = '#000fff000'
-BBB = '#000000fff'
-XXX = '#0ff0ff000'
-LGB = '#8f08f0fff'
+BGC = '#ff0ff0ff0'# 白色
+FGC = '#000000000'# 黑色
+WKC = '#000fc0fc0'# 湖蓝
+VSC = '#0000000cf'# 黑色
+RRR = '#fff000000'# 红色
+GGG = '#000fff000'# 绿色
+BBB = '#000000fff'# 蓝色
+XXX = '#0ff0ff000'# 黑色
+LGB = '#8f08f0fff'# 浅蓝
 
 # 迷宫小格子尺寸
 ROOM_HEIGHT_IN_PIX = 15

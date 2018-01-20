@@ -32,7 +32,7 @@ class MazeGame(object):
             return len(self.coll)
         
         def clear(self):
-            # Remove all elements
+            # 移除所有的元素
             self.coll.clear()
 
     def __init__(self, field, x, y):
@@ -40,18 +40,18 @@ class MazeGame(object):
         self.field_width = y
         self.walker = (0,0)
         self.field = field
-        # Build maze - array of rooms
+        # 建立迷宫 - 数组的方格
         # self.mz = [[0]*width for i in range(height)]
         for i in range(0, x):
-            self.mz.append([]) # add a row
+            self.mz.append([]) # 增加一行
             for j in range(0, y):
                 rm = maze_room.MazeRoom()
-                self.mz[i].append(rm) # add room (column) to a row
-        # Create maze representation
+                self.mz[i].append(rm) # 一行增加一个方格（列的方格）
+        # 创建迷宫的表示
         self.disp = maze_graphics.MazeGraphics(field, x, y)
 
     def clearGame(self):
-        # Clears the game
+        # 清除游戏
         self.walker = (0,0)
         self.disp.setWalker(0, 0)
         self.disp.clear()
@@ -77,11 +77,9 @@ class MazeGame(object):
         return front
 
     def breakWall(self, r, c):
-        # Selects one of the possible walls and breaks it (from both sides)
-        # Gets a front room coordinates as parameters
-
-        # Create a set of possible walls to break
-        # A breakable wall ii suck that separates a visited and front room
+        # 从两条边之间选择一个可能出去的地方并且打破它
+        # 创建一个可能的墙然后去打破它
+        # 一堵墙吸住了两个分离的走过的格子
         breakable = self.RoomSet()
         if r != 0:
             if self.mz[r - 1][c].visited():
@@ -96,16 +94,16 @@ class MazeGame(object):
             if self.mz[r][c + 1].visited():
                 breakable.add((r, c + 1))
 
-        # Select a possible room at random
+        # 随机选择一个可能的方格子
         r1, c1 = breakable.pop()
-        # Break the walls separating the rooms
+        # 打破这墙从方格里分离
         if r1 == r:
             if c1 < c:
-                # The wall of the front room
+                # 这墙是前面方格的
                 self.mz[r][c].breakWall(maze_room.L_WALL)
-                # The (same) wall of the visited room
+                # 这相同的墙是已经访问过的
                 self.mz[r1][c1].breakWall(maze_room.R_WALL)
-                # Update the representation
+                # 更新显示
                 self.disp.connectRooms(r, c, r1, c1)
             else:
                 self.mz[r][c].breakWall(maze_room.R_WALL)
@@ -124,28 +122,28 @@ class MazeGame(object):
             print("Clear breakable: size = ", breakable.len())
 
     def drawGame(self):
-        # Generate the maze
+        # 产生迷宫
         
-        # select the starting point and mark it visited
+        # 选择一个开始点并且标记为已经访问过
         col = random.randint(0, self.field_width - 1)
         row = random.randint(0, self.field_height - 1)
         self.mz[row][col].visit()
-        #print("Starting point: ", (row, col))
+        # print("Starting point: ", (row, col))
         
-        # Set up the front
+        # 设置在前面
         front = self.RoomSet()
         front = self.addToFront(front, (row, col))
         
-        # Propagate - the algorithm is known as
-        # "the modified randomized Prim's algorithm"
-        while front.len() > 0: # While rooms in front
-            # Select one as the next visited
+        # 该算法被称为 传播
+        # 改进的随机整数规划算法
+        while front.len() > 0: # 房间在前面
+            # 选择一个作为下一个访问格子
             row, col = front.pop()
             self.mz[row][col].visit()
-            # Add it to the maze
+            # 添加到这个迷宫
             self.breakWall(row, col)
-            # Add the non-visited neighbours of the new maze room
-            # to the front set
+            # 添加这个没有被访问的新的邻居格子
+            # 对于前面的设置
             front = self.addToFront(front, (row, col))
             if self.DEBUG >= 1:
                 print("front size = ", front.len())
@@ -156,7 +154,7 @@ class MazeGame(object):
             print("Generated: count = ", count)
             input("press any key")
             
-        # select entry location (lower side)
+        # 选择一个入口位置 (从底边)
         row = self.field_height - 1
         col = random.randint(0, self.field_width - 1)
         # Don't break the logical wall - the walker shouldn't
@@ -168,52 +166,52 @@ class MazeGame(object):
         self.walker = (row, col)
         self.disp.setWalker(row, col)
         
-        # select exit location (upper side)
+        # 选择一个出口位置 (向上的那一边)
         row = 0
         col = random.randint(0, self.field_width - 1)
-        # Allow moving out to finish the maze
-        # The walker never exits, though
+        # 允许移动出结束的迷宫边
+        # 这走迷宫从不退出, 通过...
         self.mz[row][col].breakWall(maze_room.U_WALL)
         self.disp.breakWall(row, col, 'U')
         # messagebox.showinfo("Break", "continue")
         self.exit = (row, col)
-        # Make the goal more visible
+        # 显示小红色的终点
         self.disp.setGoal(row, col)
         
     def move(self, mv):
-        # Move the walker
+        # 移动那个会动的小蓝点
         r, c = self.walker # from where
         #print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
-        # Try to move where the player ordered
-        if mv == 'U': # upwards
+        # 根据玩家的命令尝试移动到任何地方
+        if mv == 'U': # 向上移动
             if self.mz[r][c].hasWall(maze_room.U_WALL):
-                pass # Can't move - there's a logical wall
+                pass # 不能移动，这里有墙
             else:
-                x, y = self.exit # If we are in the front of exit
+                x, y = self.exit # 如果我们在这个出口的前面
                 if (x == r) and (y == c):
-                    # Don't move, but announce the maze solved...
-                    messagebox.showinfo("Ratkaistu", "Olet ratkaissut labyrintin")
-                    return True # ... and leave the game
-                # else, move as ordered
+                    # 不能移动，但是会通知你你已经走出迷宫...
+                    messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！")
+                    return False # ... 并且等待游戏
+                # 或者，移动作为命令
                 self.walker = (r - 1, c)
                 self.disp.moveWalker(r - 1, c)
-        elif mv == 'D':
+        elif mv == 'D': # 向下移动
             if self.mz[r][c].hasWall(maze_room.D_WALL):
                 pass
             else:
                 self.walker = (r + 1, c)
                 self.disp.moveWalker(r + 1, c)
-        elif mv == 'L':
+        elif mv == 'L': # 向左移动
             if self.mz[r][c].hasWall(maze_room.L_WALL):
                 pass
             else:
                 self.walker = (r, c - 1)
                 self.disp.moveWalker(r, c - 1)
-        elif mv == 'R':
+        elif mv == 'R': # 向右移动
             if self.mz[r][c].hasWall(maze_room.R_WALL):
                 pass
             else:
                 self.walker = (r, c + 1)
                 self.disp.moveWalker(r, c + 1)
-        return False # The quest continues
+        return False # 寻求迷宫出口仍在继续
 
