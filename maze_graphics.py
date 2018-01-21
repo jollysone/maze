@@ -18,8 +18,8 @@ XXX = '#0ff0ff000'# 黑色
 LGB = '#8f08f0fff'# 浅蓝
 
 # 迷宫小格子尺寸
-ROOM_HEIGHT_IN_PIX = 15
-ROOM_WIDTH_IN_PIX = 15
+ROOM_HEIGHT_IN_PIX = 35
+ROOM_WIDTH_IN_PIX = 35
 
 # Wall-IDs也就是墙的ID
 U_WALL = 1
