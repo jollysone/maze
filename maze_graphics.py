@@ -3,8 +3,7 @@
 # Author: Jolly_Son
 # 功能：迷宫绘制
 
-import tkinter as tk
-# 这个是像素
+# import tkinter as tk
 
 # 一些颜色
 BGC = '#ff0ff0ff0'# 白色
@@ -36,7 +35,7 @@ class MazeGraphics(object):
     DEBUG = 0
     roomheight = ROOM_HEIGHT_IN_PIX
     roomwidth = ROOM_WIDTH_IN_PIX
-    walker = (0, 0) # 迷宫里可行走的小蓝点
+    walker = (0, 0) # 迷宫里可行走的小蓝点初始化
     mz = [] # 迷宫的表示
     
     class Room(object):
@@ -107,15 +106,13 @@ class MazeGraphics(object):
         self.field = field
         self.width = y
         self.height = x
-        # 建立迷宫格子-数组存储
+        # 建立迷宫格子
         for i in range(0, x):
             self.mz.append([])
             for j in range(0, y):
                 loc = (i*self.roomheight+x_offset, j*self.roomwidth+y_offset)
                 rm = self.Room(field, loc, self.roomwidth, self.roomheight)
                 self.mz[i].append(rm)
-                print(rm)
-            print(self.mz)
 
     def clear(self):
         # 重置迷宫，初始化迷宫状态
@@ -179,7 +176,7 @@ class MazeGraphics(object):
 
         #  测试####################################
 
-        print("graph: walker = ", self.walker, " to ", (i ,j))
+        # print("graph: walker = ", self.walker, " to ", (i ,j))
 
 
 

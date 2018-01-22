@@ -3,7 +3,7 @@
 # Author: Jolly_Son
 # 功能：
 
-import tkinter as tk
+# import tkinter as tk
 from tkinter import messagebox
 import random
 import maze_room
@@ -41,7 +41,6 @@ class MazeGame(object):
         self.walker = (0,0)
         self.field = field
         # 建立迷宫 - 数组的方格
-        # self.mz = [[0]*width for i in range(height)]
         for i in range(0, x):
             self.mz.append([]) # 增加一行
             for j in range(0, y):
@@ -123,18 +122,18 @@ class MazeGame(object):
 
     def drawGame(self):
         # 产生迷宫
-        
+
         # 选择一个开始点并且标记为已经访问过
         col = random.randint(0, self.field_width - 1)
         row = random.randint(0, self.field_height - 1)
         self.mz[row][col].visit()
-        # print("Starting point: ", (row, col))
-        
+        print("Starting point: ", (row, col))
+
         # 设置在前面
         front = self.RoomSet()
         front = self.addToFront(front, (row, col))
-        
-        # 该算法被称为 传播
+
+        # 该算法被称为 传播算法
         # 改进的随机整数规划算法
         while front.len() > 0: # 房间在前面
             # 选择一个作为下一个访问格子
@@ -153,19 +152,20 @@ class MazeGame(object):
         if self.DEBUG >= 1:
             print("Generated: count = ", count)
             input("press any key")
-            
+
         # 选择一个入口位置 (从底边)
         row = self.field_height - 1
         col = random.randint(0, self.field_width - 1)
-        # Don't break the logical wall - the walker shouldn't
-        # wander outside the maze
-        # self.mz[row][col].breakWall(maze_room.D_WALL)
-        # Show the entry location nevertheless
+        # 小蓝点不能打破那个逻辑墙
+        # 只能走在迷宫的逻辑墙外面
+        # 尽管显示了入口位置
+        # 也不能执行这句self.mz[row][col].breakWall(maze_room.D_WALL)
+        # 这句会使蓝点走出迷宫入口
         self.disp.breakWall(row, col, 'D')
         # And put the walker there
         self.walker = (row, col)
         self.disp.setWalker(row, col)
-        
+
         # 选择一个出口位置 (向上的那一边)
         row = 0
         col = random.randint(0, self.field_width - 1)
@@ -173,11 +173,10 @@ class MazeGame(object):
         # 这走迷宫从不退出, 通过...
         self.mz[row][col].breakWall(maze_room.U_WALL)
         self.disp.breakWall(row, col, 'U')
-        # messagebox.showinfo("Break", "continue")
         self.exit = (row, col)
         # 显示小红色的终点
         self.disp.setGoal(row, col)
-        
+
     def move(self, mv):
         # 移动那个会动的小蓝点
         r, c = self.walker # from where
@@ -214,4 +213,3 @@ class MazeGame(object):
                 self.walker = (r, c + 1)
                 self.disp.moveWalker(r, c + 1)
         return False # 寻求迷宫出口仍在继续
-
