@@ -181,7 +181,7 @@ class MazeGame(object):
     def move(self, mv):
         # 移动那个会动的小蓝点
         r, c = self.walker # from where
-        #print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
+        # print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
         # 根据玩家的命令尝试移动到任何地方
         if mv == 'U': # 向上移动
             if self.mz[r][c].hasWall(maze_room.U_WALL):

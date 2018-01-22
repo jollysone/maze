@@ -114,6 +114,8 @@ class MazeGraphics(object):
                 loc = (i*self.roomheight+x_offset, j*self.roomwidth+y_offset)
                 rm = self.Room(field, loc, self.roomwidth, self.roomheight)
                 self.mz[i].append(rm)
+                print(rm)
+            print(self.mz)
 
     def clear(self):
         # 重置迷宫，初始化迷宫状态

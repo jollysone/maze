@@ -12,37 +12,6 @@ import maze_graphics
 x = 10 # 迷宫的高
 y = 10 # 迷宫的宽
 
-# class SetMazeScale(tk.Frame):
-#     def __init__(self, master):
-#         super().__init__()
-#         self.master = master
-#         self.master.resizable(0, 0)
-#         self.master.wm_title("DIY 我的迷宫!")
-#         self.pack(fill=tk.BOTH, expand=1)
-#
-#     def create_widgets(self):
-#         self.setupFrame = tk.Frame(self, borderwidth=2, relief="ridge")
-#         self.widthLabel = tk.Label(self.setupFrame, text="设置迷宫宽:")
-#         self.widthLabel.pack(side="left")
-#         self.widthEntry = tk.Entry(self.setupFrame, width=2)
-#         self.widthEntry.pack(side="left", fill="x", expand=True)
-#
-#         self.heightLabel = tk.Label(self.setupFrame, text="设置迷宫高:")
-#         self.heightLabel.pack(side="left")
-#         self.heightEntry = tk.Entry(self.setupFrame, width=2)
-#         self.heightEntry.pack(side="left", fill="x", expand=True)
-#
-#         self.generateButton = tk.Button(self.setupFrame, text="生成!")
-#         self.generateButton.bind("<Button-1>", self.new_maze)
-#         self.generateButton.pack(side="left")
-#
-#     def new_maze(self, event):
-#         global x,y
-#         y = int(self.widthEntry.get())
-#         x = int(self.heightEntry.get())
-
-
-
 class Application(tk.Frame):
     # 这个是应用类
     def __init__(self, master=None):
@@ -177,6 +146,8 @@ app.mainloop()
 
 # 打印测试
 print("Game over")
+
+
 
 
 window.destroy() # 某些 IDEs 需要这个
