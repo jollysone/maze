@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Author: Jolly_Son
 # 功能：主程序，包括按键处理等
-
+import random
 from tkinter import *
 import tkinter as tk
 import maze_game
@@ -11,6 +11,7 @@ import maze_graphics
 # 这个是设置迷宫规模
 x = 10 # 初始化迷宫的高
 y = 10 # 初始化迷宫的宽
+
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -47,6 +48,7 @@ class Application(tk.Frame):
         # 设置游戏初始化
         self.game.clearGame()
         self.game.drawGame()
+        self.game.auto()
 
     def stopGame(self):
         # 杀死这个应用
@@ -92,8 +94,7 @@ class Application(tk.Frame):
     def playGame(self):
         # 开始游戏
         self.initGame()
-        self.addHandler(self.field)
-        # return in App mainloop to play
+        # self.addHandler(self.field)
 
 def generateMaze():
     global x,y

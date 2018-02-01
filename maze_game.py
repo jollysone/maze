@@ -12,6 +12,9 @@ import maze_graphics
 class MazeGame(object):
     DEBUG = 0
     mz = []
+    Quit = (0,0)
+    w = (0,0)
+    flag = 0
     class RoomSet(object):
         # A helper - 'ordered' set with random pop
         def __init__(self):
@@ -174,6 +177,8 @@ class MazeGame(object):
         self.mz[row][col].breakWall(maze_room.U_WALL)
         self.disp.breakWall(row, col, 'U')
         self.exit = (row, col)
+        global Quit
+        Quit = (row, col)
         # 显示小红色的终点
         self.disp.setGoal(row, col)
 
@@ -184,6 +189,8 @@ class MazeGame(object):
         # 根据玩家的命令尝试移动到任何地方
         if mv == 'U': # 向上移动
             if self.mz[r][c].hasWall(maze_room.U_WALL):
+                global flag
+                flag = 1
                 pass # 不能移动，这里有墙
             else:
                 x, y = self.exit # 如果我们在这个出口的前面
@@ -213,3 +220,34 @@ class MazeGame(object):
                 self.walker = (r, c + 1)
                 self.disp.moveWalker(r, c + 1)
         return False # 寻求迷宫出口仍在继续
+
+    def auto(self):
+        r, c = self.walker  # 从哪里开始的
+        self.answer(r, c)
+
+    def answer(self,i,j):
+        # r, c = self.walker  # 从哪里开始的
+        xx, yy = self.exit  # 如果我们在这个出口的前面
+        # print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
+        # 根据玩家的命令尝试移动到任何地方
+        x, y = self.walker
+
+        self.mz[x][y].markWalker()
+        self.mz[i][j].setWalker()
+        self.walker = (i, j)
+        if (xx == i) and (yy == j):
+            print(True)
+            pass
+
+        if not (xx == i) and (yy == j):
+            self.walker = (i - 1, j)
+            self.answer(i - 1, j)
+        if not (xx == i) and (yy == j):
+            self.walker = (i + 1, j)
+            self.answer(i + 1, j)
+        if not (xx == i) and (yy == j):
+            self.walker = (i, j - 1)
+            self.answer(i, j- 1)
+        if not (xx == i) and (yy == j):
+            self.walker = (i ,j + 1)
+            self.answer(i, j + 1)
