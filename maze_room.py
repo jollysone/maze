@@ -28,6 +28,12 @@ class MazeRoom(object):
         else:
             return True
 
+    def noWall(self,wall):
+        if self.room & wall == 0:
+            return True
+        else:
+            return False
+
     def visit(self):
         self.room |= VISITED
 

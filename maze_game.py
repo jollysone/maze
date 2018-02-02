@@ -223,6 +223,9 @@ class MazeGame(object):
 
     def auto(self):
         r, c = self.walker  # 从哪里开始的
+        xx, yy = self.exit
+        print(xx,yy,r,c)
+        # exit()
         self.answer(r, c)
 
     def answer(self,i,j):
@@ -231,23 +234,30 @@ class MazeGame(object):
         # print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
         # 根据玩家的命令尝试移动到任何地方
         x, y = self.walker
+        found = False
+        print(xx,yy,x,y)
 
-        self.mz[x][y].markWalker()
-        self.mz[i][j].setWalker()
-        self.walker = (i, j)
-        if (xx == i) and (yy == j):
-            print(True)
-            pass
+        if (xx == x) and (yy == y):
+            found = True
+            print('ok')
+            messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！")
+            exit()
+            return False
 
-        if not (xx == i) and (yy == j):
+        if (not found and (self.mz[i][j].noWall(maze_room.U_WALL)) and i - 1 >= 0):
             self.walker = (i - 1, j)
+            self.disp.moveWalker(i - 1, j)
             self.answer(i - 1, j)
-        if not (xx == i) and (yy == j):
+        if (not found and (self.mz[i][j].noWall(maze_room.D_WALL)) and i + 1 <= 9):
             self.walker = (i + 1, j)
+            self.disp.moveWalker(i + 1, j)
             self.answer(i + 1, j)
-        if not (xx == i) and (yy == j):
+        if (not found and (self.mz[i][j].noWall(maze_room.L_WALL)) and j - 1 >= 0):
             self.walker = (i, j - 1)
+            self.disp.moveWalker(i, j - 1)
             self.answer(i, j- 1)
-        if not (xx == i) and (yy == j):
+        if (not found and (self.mz[i][j].noWall(maze_room.R_WALL)) and i + 1 <= 9):
             self.walker = (i ,j + 1)
+            self.disp.moveWalker(i, j + 1)
             self.answer(i, j + 1)
+        return found
