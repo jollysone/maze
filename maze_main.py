@@ -28,7 +28,7 @@ class Application(tk.Frame):
         xx = x * maze_graphics.ROOM_HEIGHT_IN_PIX
         field = tk.Canvas(self, width=yy, height=xx, background=maze_graphics.BGC)
         field.grid()
-        print("Canvas: xx=", xx, " yy=", yy, " w=", field.winfo_reqwidth(), " h=", field.winfo_reqheight())
+        # print("Canvas: xx=", xx, " yy=", yy, " w=", field.winfo_reqwidth(), " h=", field.winfo_reqheight())
         self.quitButton = tk.Button(self, text='不想玩了', command=self.stopGame)
         self.quitButton.grid()
         self.quitButton = tk.Button(self, text='重开一盘', command=self.playGame)

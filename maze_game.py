@@ -6,12 +6,18 @@
 # import tkinter as tk
 from tkinter import messagebox
 import random
+
+import time
+
+import sys
+
 import maze_room
 import maze_graphics
 
 class MazeGame(object):
     DEBUG = 0
     mz = []
+    visited = []
     Quit = (0,0)
     w = (0,0)
     flag = 0
@@ -39,9 +45,11 @@ class MazeGame(object):
             self.coll.clear()
 
     def __init__(self, field, x, y):
+        sys.setrecursionlimit(1000000)  # 例如这里设置为一百万
         self.field_height = x
         self.field_width = y
         self.walker = (0,0)
+        self.Walker = (0,0)
         self.field = field
         # 建立迷宫 - 数组的方格
         for i in range(0, x):
@@ -130,7 +138,7 @@ class MazeGame(object):
         col = random.randint(0, self.field_width - 1)
         row = random.randint(0, self.field_height - 1)
         self.mz[row][col].visit()
-        print("Starting point: ", (row, col))
+        # print("Starting point: ", (row, col))
 
         # 设置在前面
         front = self.RoomSet()
@@ -224,40 +232,76 @@ class MazeGame(object):
     def auto(self):
         r, c = self.walker  # 从哪里开始的
         xx, yy = self.exit
-        print(xx,yy,r,c)
+        print('起点x y:',xx,yy,'终点x y:',r,c)
         # exit()
         self.answer(r, c)
 
     def answer(self,i,j):
-        # r, c = self.walker  # 从哪里开始的
-        xx, yy = self.exit  # 如果我们在这个出口的前面
+        x, y = self.walker #当前点所在位置 (0,7)
+        xx, yy = self.exit  # 结束的出口前面(9,3)
         # print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
-        # 根据玩家的命令尝试移动到任何地方
-        x, y = self.walker
-        found = False
-        print(xx,yy,x,y)
+        found = None
 
         if (xx == x) and (yy == y):
             found = True
-            print('ok')
-            messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！")
-            exit()
-            return False
 
-        if (not found and (self.mz[i][j].noWall(maze_room.U_WALL)) and i - 1 >= 0):
-            self.walker = (i - 1, j)
-            self.disp.moveWalker(i - 1, j)
-            self.answer(i - 1, j)
-        if (not found and (self.mz[i][j].noWall(maze_room.D_WALL)) and i + 1 <= 9):
-            self.walker = (i + 1, j)
-            self.disp.moveWalker(i + 1, j)
-            self.answer(i + 1, j)
-        if (not found and (self.mz[i][j].noWall(maze_room.L_WALL)) and j - 1 >= 0):
-            self.walker = (i, j - 1)
-            self.disp.moveWalker(i, j - 1)
-            self.answer(i, j- 1)
-        if (not found and (self.mz[i][j].noWall(maze_room.R_WALL)) and i + 1 <= 9):
-            self.walker = (i ,j + 1)
-            self.disp.moveWalker(i, j + 1)
-            self.answer(i, j + 1)
+        if found == True:
+            messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！")
+            time.sleep(5)
+            return
+
+        print(self.visited)
+        print(found)
+        print('*******',x, y, xx, yy)
+        up = self.mz[x][y].hasWall(maze_room.U_WALL)
+        down = self.mz[x][y].hasWall(maze_room.D_WALL)
+        left = self.mz[x][y].hasWall(maze_room.L_WALL)
+        right = self.mz[x][y].hasWall(maze_room.R_WALL)
+        exit()
+        if self.walker not in self.visited:
+            if (not found) and (i - 1 >= 0) and (not up):
+                print('往上走')
+                self.walker = (i - 1, j)
+                self.disp.moveWalker(i - 1, j)
+                self.answer(i - 1, j)
+
+            if (not found) and (i + 1 <= 9) and (not down):
+                print('往下走')
+                self.walker = (i + 1, j)
+                self.disp.moveWalker(i + 1, j)
+                self.answer(i + 1, j)
+
+            if (not found) and (j - 1 >= 0) and (not left):
+                print('往左走')
+                self.walker = (i, j - 1)
+                self.disp.moveWalker(i, j - 1)
+                self.answer(i, j- 1)
+
+            if (not found) and (j + 1 <= 9) and (not right):
+                print('往右走')
+                self.walker = (i ,j + 1)
+                self.disp.moveWalker(i, j + 1)
+                self.answer(i, j + 1)
+
+            if (not found) and (up and down and left and right):
+                self.visited.append(self.walker)
+
+            # if (not found) and (up and right and down):
+            #     self.walker = (i, j - 1)
+            #     self.visited.append(self.walker)
+            #
+            # if (not found) and (right and down and left):
+            #     self.walker = (i - 1, j)
+            #     self.visited.append(self.walker)
+            #
+            # if (not found) and (down and left and up):
+            #     self.walker = (i, j + 1)
+            #     self.visited.append(self.walker)
+            #
+            # if (not found) and (left and up and right):
+            #     self.walker = (i + 1, j)
+            #     self.visited.append(self.walker)
+
+
+            # exit()
         return found
