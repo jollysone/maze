@@ -260,46 +260,34 @@ class MazeGame(object):
         left = self.mz[x][y].noWall(maze_room.L_WALL)
         right = self.mz[x][y].noWall(maze_room.R_WALL)
 
-        # if (not found) and (not up and not right and not down):
-        #     self.visited2.append(self.walker)
-        # if (not found) and (not right and not down and not left):
-        #     self.visited2.append(self.walker)
-        # if (not found) and (not down and not left and not up):
-        #     self.visited2.append(self.walker)
-        # if (not found) and (not left and not up and not right):
-        #     self.visited2.append(self.walker)
+        
 
-        # if self.walker not in self.visited2:
+        if (not found):
+            self.visited2.append(self.walker)
 
-
-        if (not found) and (i - 1 >= 0) and (up) and ((i - 1, j) not in self.visited) and (i - 1, j) not in self.visited2:
+        if (not found) and (i - 1 >= 0) and (up) and ((i - 1, j) not in self.visited):
             print('往上走')
             self.walker = (i - 1, j)
             self.disp.moveWalker(i - 1, j)
-            return self.answer(i - 1, j)
+            self.answer(i - 1, j)
 
-        if (not found) and (j - 1 >= 0) and (left) and ((i, j - 1) not in self.visited) and (i, j - 1) not in self.visited2:
-            print('往左走')
-            self.walker = (i, j - 1)
-            self.disp.moveWalker(i, j - 1)
-            return self.answer(i, j- 1)
-
-        if (not found) and (j + 1 <= 9) and (right) and ((i, j + 1) not in self.visited) and (i, j + 1) not in self.visited2:
-            print('往右走')
-            self.walker = (i ,j + 1)
-            self.disp.moveWalker(i, j + 1)
-            return self.answer(i, j + 1)
-
-        if (not found) and (i + 1 <= 9) and (down) and ((i + 1, j) not in self.visited2) and (i + 1, j) not in self.visited2:
+        if (not found) and (i + 1 <= 9) and (down) and ((i + 1, j) not in self.visited):
             print('往下走')
             self.walker = (i + 1, j)
             self.disp.moveWalker(i + 1, j)
-            return self.answer(i + 1, j)
-        
-        if (not found) and (self.walker in self.visited):
-            self.visited2.append(self.walker)
-        elif (not found) and (self.walker not in self.visited):
-            self.visited.append(self.walker)
+            self.answer(i + 1, j)
+
+        if (not found) and (j - 1 >= 0) and (left) and ((i, j - 1) not in self.visited):
+            print('往左走')
+            self.walker = (i, j - 1)
+            self.disp.moveWalker(i, j - 1)
+            self.answer(i, j- 1)
+
+        if (not found) and (j + 1 <= 9) and (right) and ((i, j + 1) not in self.visited):
+            print('往右走')
+            self.walker = (i ,j + 1)
+            self.disp.moveWalker(i, j + 1)
+            self.answer(i, j + 1)
 
             # exit()
         return found
