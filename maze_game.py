@@ -18,10 +18,6 @@ class MazeGame(object):
     DEBUG = 0
     mz = []
     visited = []
-    visited2 = []
-    Quit = (0,0)
-    w = (0,0)
-    flag = 0
     class RoomSet(object):
         # A helper - 'ordered' set with random pop
         def __init__(self):
@@ -186,8 +182,6 @@ class MazeGame(object):
         self.mz[row][col].breakWall(maze_room.U_WALL)
         self.disp.breakWall(row, col, 'U')
         self.exit = (row, col)
-        global Quit
-        Quit = (row, col)
         # 显示小红色的终点
         self.disp.setGoal(row, col)
 
@@ -230,64 +224,60 @@ class MazeGame(object):
                 self.disp.moveWalker(r, c + 1)
         return False # 寻求迷宫出口仍在继续
 
-    def auto(self):
+    def auto(self,x,y):
         r, c = self.walker  # 从哪里开始的
         xx, yy = self.exit
         print('起点x y:',r,c,'终点x y:',xx,yy)
         # exit()
-        self.answer(r, c)
+        self.answer(r, c, x, y)
 
-    def answer(self,i,j):
-        x, y = self.walker #当前点所在位置 (0,7)
+    def answer(self,i,j,x,y):
+        x1, y1 = self.walker #当前点所在位置 (0,7)
         xx, yy = self.exit  # 结束的出口前面(9,3)
         found = None
 
-        if (xx == x) and (yy == y):
+        if (xx == x1) and (yy == y1):
             found = True
 
         if found == True:
-            messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！")
+            messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！即将在5秒后提示退出。")
             time.sleep(5)
-            return
+            messagebox.showwarning("成功破获迷宫", "点击ok退出！")
+            exit()
 
         print(self.visited)
-        print(self.visited2)
         print(found)
         print('*******',x, y, xx, yy)
 
-        up = self.mz[x][y].noWall(maze_room.U_WALL)
-        down = self.mz[x][y].noWall(maze_room.D_WALL)
-        left = self.mz[x][y].noWall(maze_room.L_WALL)
-        right = self.mz[x][y].noWall(maze_room.R_WALL)
-
-        
+        up = self.mz[x1][y1].noWall(maze_room.U_WALL)
+        down = self.mz[x1][y1].noWall(maze_room.D_WALL)
+        left = self.mz[x1][y1].noWall(maze_room.L_WALL)
+        right = self.mz[x1][y1].noWall(maze_room.R_WALL)
 
         if (not found):
-            self.visited2.append(self.walker)
+            self.visited.append(self.walker)
 
         if (not found) and (i - 1 >= 0) and (up) and ((i - 1, j) not in self.visited):
             print('往上走')
             self.walker = (i - 1, j)
             self.disp.moveWalker(i - 1, j)
-            self.answer(i - 1, j)
+            self.answer(i - 1, j, x, y)
 
-        if (not found) and (i + 1 <= 9) and (down) and ((i + 1, j) not in self.visited):
+        if (not found) and (i + 1 <= x+1) and (down) and ((i + 1, j) not in self.visited):
             print('往下走')
             self.walker = (i + 1, j)
             self.disp.moveWalker(i + 1, j)
-            self.answer(i + 1, j)
+            self.answer(i + 1, j, x, y)
 
         if (not found) and (j - 1 >= 0) and (left) and ((i, j - 1) not in self.visited):
             print('往左走')
             self.walker = (i, j - 1)
             self.disp.moveWalker(i, j - 1)
-            self.answer(i, j- 1)
+            self.answer(i, j- 1, x, y)
 
-        if (not found) and (j + 1 <= 9) and (right) and ((i, j + 1) not in self.visited):
+        if (not found) and (j + 1 <= y+1) and (right) and ((i, j + 1) not in self.visited):
             print('往右走')
             self.walker = (i ,j + 1)
             self.disp.moveWalker(i, j + 1)
-            self.answer(i, j + 1)
-
-            # exit()
+            self.answer(i, j + 1, x, y)
         return found

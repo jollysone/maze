@@ -33,7 +33,7 @@ class Application(tk.Frame):
         self.quitButton.grid()
         self.quitButton = tk.Button(self, text='重开一盘', command=self.playGame)
         self.quitButton.grid()
-        self.quitButton = tk.Button(self, text='悄悄看看答案', command=self.createWidgets)
+        self.quitButton = tk.Button(self, text='悄悄看看答案', command=self.answer)
         self.quitButton.grid()
         self.textLabel = tk.Label(self, text="使用'↑' '↓' '←' '→'进行游戏，蓝点是入口，红点是出口处")
         self.textLabel.grid()
@@ -48,7 +48,9 @@ class Application(tk.Frame):
         # 设置游戏初始化
         self.game.clearGame()
         self.game.drawGame()
-        self.game.auto()
+
+    def answer(self):
+        self.game.auto(x,y)
 
     def stopGame(self):
         # 杀死这个应用
@@ -94,7 +96,7 @@ class Application(tk.Frame):
     def playGame(self):
         # 开始游戏
         self.initGame()
-        # self.addHandler(self.field)
+        self.addHandler(self.field)
 
 def generateMaze():
     global x,y
