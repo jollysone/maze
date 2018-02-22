@@ -12,7 +12,6 @@ import maze_graphics
 x = 10 # 初始化迷宫的高
 y = 10 # 初始化迷宫的宽
 
-
 class Application(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)

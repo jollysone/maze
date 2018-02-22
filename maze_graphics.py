@@ -178,9 +178,6 @@ class MazeGraphics(object):
 
         # print("graph: walker = ", self.walker, " to ", (i ,j))
 
-
-
-
         self.mz[x][y].clearWalker()
         self.mz[i][j].setWalker()
         self.walker = (i, j)
@@ -196,4 +193,3 @@ class MazeGraphics(object):
         self.mz[x][y].markWalker()
         self.mz[i][j].setWalker()
         self.walker = (i, j)
-       

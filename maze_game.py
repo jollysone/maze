@@ -6,11 +6,8 @@
 # import tkinter as tk
 from tkinter import messagebox
 import random
-
 import time
-
 import sys
-
 import maze_room
 import maze_graphics
 
