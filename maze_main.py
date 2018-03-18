@@ -36,7 +36,7 @@ class Application(tk.Frame):
         self.textLabel.grid()
         self.textLabel = tk.Label(self, text="使用'↑' '↓' '←' '→'进行游戏，蓝点是入口，红点是出口处")
         self.textLabel.grid()
-        self.quitButton = tk.Button(self, text='悄悄看看答案', command=self.answer)
+        self.quitButton = tk.Button(self, text='悄悄看答案', command=self.answer)
         self.quitButton.grid()
         self.quitButton = tk.Button(self, text='重开一盘', command=self.playGame)
         self.quitButton.grid()
