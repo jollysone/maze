@@ -8,9 +8,6 @@ from tkinter import messagebox
 import random
 import time
 import sys
-
-import copy
-
 import maze_room
 import maze_graphics
 
@@ -64,6 +61,9 @@ class MazeGame(object):
 
     def clearGame(self):
         # 清除游戏
+
+        self.star = 0
+        self.end = 0
         self.walker = (0,0)
         self.disp.setWalker(0, 0)
         self.disp.clear()
@@ -193,12 +193,12 @@ class MazeGame(object):
     def move(self, mv):
         if self.star is 0:
             self.star = time.time()
-        global end
-        end = time.time()
 
-        if (end - self.star) >= 10:
+        if (self.end - self.star) >= 10:
             messagebox.showerror("超时！", "对不起，您已经超时了！别气馁，下次继续努力！可以点击窗口下方\"悄悄看答案\"哦。")
 
+        # global end
+        self.end = time.time()
         # 移动那个会动的小蓝点
         r, c = self.walker # from where
         # print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
