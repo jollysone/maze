@@ -8,6 +8,9 @@ from tkinter import messagebox
 import random
 import time
 import sys
+
+import copy
+
 import maze_room
 import maze_graphics
 
@@ -18,6 +21,7 @@ class MazeGame(object):
     visited2 = []
     star = 0
     end = 0
+    obj = []
     class RoomSet(object):
         # A helper - 'ordered' set with random pop
         def __init__(self):
@@ -187,14 +191,11 @@ class MazeGame(object):
         self.disp.setGoal(row, col)
 
     def move(self, mv):
-        self.visited2.append(self.walker)
         if self.star is 0:
             self.star = time.time()
         global end
         end = time.time()
-        # print("移动的end：",end)
-        # print("移动的star：",self.star)
-        # print("结果：",end - self.star)
+
         if (end - self.star) >= 10:
             messagebox.showerror("超时！", "对不起，您已经超时了！别气馁，下次继续努力！可以点击窗口下方\"悄悄看答案\"哦。")
 
@@ -202,6 +203,7 @@ class MazeGame(object):
         r, c = self.walker # from where
         # print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
         # 根据玩家的命令尝试移动到任何地方
+        self.visited2.append(self.walker)
         if mv == 'U': # 向上移动
             if self.mz[r][c].hasWall(maze_room.U_WALL):
                 messagebox.showerror("你撞南墙了！", "你是不撞南墙不回头？")
@@ -255,12 +257,10 @@ class MazeGame(object):
         if (xx == x1) and (yy == y1):
             found = True
             print(self.visited)
+            print(self.visited2)
 
         if found == True:
-            v = self.visited
-            obj = self.visited2.extend(v)
-            print(type(obj))
-            messagebox.showinfo("机器自动尝试的路径！", obj)
+            messagebox.showinfo("机器自动尝试的路径！", self.visited2)
             messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！即将在1秒后提示退出。")
             time.sleep(1)
             messagebox.showwarning("成功破获迷宫", "点击ok退出！")
@@ -273,6 +273,7 @@ class MazeGame(object):
 
         if (not found):
             self.visited.append(self.walker)
+            self.visited2.append(self.walker)
 
         if (not found) and (i - 1 >= 0) and (up) and ((i - 1, j) not in self.visited):
             print('往上走')
