@@ -2,12 +2,9 @@
 # -*- coding: utf-8 -*-
 # Author: Jolly_Son
 # 功能：主程序，包括按键处理等
-import random
+
 from tkinter import *
 import tkinter as tk
-
-import time
-
 import maze_game
 import maze_graphics
 
@@ -17,6 +14,7 @@ y = 10 # 初始化迷宫的宽
 
 class Application(tk.Frame):
     def __init__(self, master=None):
+        # 构造函数
         tk.Frame.__init__(self, master)
         self.x = x
         self.y = y
@@ -27,22 +25,22 @@ class Application(tk.Frame):
 
 
     def createWidgets(self, x, y):
+        # 创建图形化界面的一部分
         yy = y * maze_graphics.ROOM_WIDTH_IN_PIX
         xx = x * maze_graphics.ROOM_HEIGHT_IN_PIX
         field = tk.Canvas(self, width=yy, height=xx, background=maze_graphics.BGC)
         field.grid()
         # print("Canvas: xx=", xx, " yy=", yy, " w=", field.winfo_reqwidth(), " h=", field.winfo_reqheight())
 
-
         self.textLabel = tk.Label(self, text="请在30s内完成游戏")
         self.textLabel.grid()
         self.textLabel = tk.Label(self, text="使用'↑' '↓' '←' '→'进行游戏，蓝点是入口，红点是出口处")
         self.textLabel.grid()
-        self.quitButton = tk.Button(self, text='不想玩了', command=self.stopGame)
+        self.quitButton = tk.Button(self, text='悄悄看看答案', command=self.answer)
         self.quitButton.grid()
         self.quitButton = tk.Button(self, text='重开一盘', command=self.playGame)
         self.quitButton.grid()
-        self.quitButton = tk.Button(self, text='悄悄看看答案', command=self.answer)
+        self.quitButton = tk.Button(self, text='不想玩了', command=self.stopGame)
         self.quitButton.grid()
         return field
 
@@ -57,6 +55,7 @@ class Application(tk.Frame):
         self.game.drawGame()
 
     def answer(self):
+        #  “悄悄看答案”部分
         self.game.auto(x,y)
 
     def stopGame(self):
@@ -106,6 +105,7 @@ class Application(tk.Frame):
         self.addHandler(self.field)
 
 def generateMaze():
+    # 产生迷宫
     global x,y
     if width.get()=='' or height.get()=='':
         y,x = 12,12
@@ -114,16 +114,18 @@ def generateMaze():
         x = int(height.get())+2
     window.destroy()
 
+# 设置规模时 使输入框只能输入数字的模块相关的
 def test(content): #如果你不加上==""的话，你就会发现删不完。总会剩下一个数字
     if content.isdigit() or (content==""):
         return True
     else:
         return False
 
+
+# 设置规模窗口的部分
 window = tk.Tk()
 window.title('DIY 我的迷宫！')
-window.geometry('200x155')
-
+window.geometry('500x255')
 v1 = StringVar()
 v2 = StringVar()
 v1.set('10')
@@ -140,11 +142,11 @@ width.pack()
 heightLabel = tk.Label(text="设置迷宫宽:").pack()
 height = tk.Entry(window,show=None,textvariable=v2,validate='key',validatecommand=(testCMD,'%P'))
 height.pack()
-tk.Label(fg='red',font=("微软雅黑",8),text="推荐迷宫 10*10 或 15*15 ").pack()
-generate = tk.Button(window,text='生成迷宫',width=50,height=50,command=generateMaze).pack()
-tips = tk.Label(text="推荐迷宫 10*10 或 15*15 ")
-tips.pack()
+tk.Label(fg='red',font=("微软雅黑",10),text="推荐迷宫 10*10 最大宽高最好不要超过12以免显示超出显示屏 ").pack()
+generate = tk.Button(window,text='生成迷宫',width=18,height=10,command=generateMaze).pack()
 window.mainloop()
+
+# 正式运行整个迷宫窗口的部分
 app = Application()
 app.master.title('Maze-迷宫小游戏 v1.0')
 

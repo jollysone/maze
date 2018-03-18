@@ -5,7 +5,7 @@
 
 # import tkinter as tk
 
-# 一些颜色
+# 提供一些颜色，但是不一定全部用上
 BGC = '#ff0ff0ff0'# 白色
 FGC = '#000000000'# 黑色
 WKC = '#000fc0fc0'# 湖蓝
@@ -70,19 +70,23 @@ class MazeGraphics(object):
             self.field.itemconfigure(self.dw, fill=FGC)
             self.field.itemconfigure(self.lw, fill=FGC)
             self.field.itemconfigure(self.wlk, fill=BGC)
-
+        # 设置小蓝点的颜色
         def setWalker(self):
             self.field.itemconfigure(self.wlk, fill=BBB)
 
+        # 设置“悄悄看答案”部分小蓝点的颜色为绿色
         def setWalkerAnswer(self):
             self.field.itemconfigure(self.wlk, fill=GGG)
 
+        # 清除小点颜色
         def clearWalker(self):
             self.field.itemconfigure(self.wlk, fill=BGC)
 
+        # 标记为浅蓝色
         def markWalker(self):
             self.field.itemconfigure(self.wlk, fill=LGB)
 
+        # 设置“悄悄看答案”部分，标记为浅蓝色
         def markWalkerAnswer(self):
             self.field.itemconfigure(self.wlk, fill=GGG)
 
@@ -167,8 +171,9 @@ class MazeGraphics(object):
                     self.mz[x1][y1].markCell('#ff0000000')
                     print("Connect rooms: (",x,",",y,") U_WALL and (",x1,",",y1,") D_WALL")
                 self.mz[x][y].breakWall(U_WALL)
-                self.mz[x1][y1].breakWall(D_WALL)            
+                self.mz[x1][y1].breakWall(D_WALL)
 
+    # 清除
     def clearWalker(self, i, j):
         self.mz[i][j].clearWalker()
         
@@ -188,6 +193,7 @@ class MazeGraphics(object):
         self.mz[i][j].setWalker()
         self.walker = (i, j)
 
+    # 手动操作部分的移动轨迹
     def moveWalker(self, i, j):
         # 移动蓝点从一个格子到另一个格子离开的踪迹
         x, y = self.walker
@@ -200,6 +206,7 @@ class MazeGraphics(object):
         self.mz[i][j].setWalker()
         self.walker = (i, j)
 
+    # “悄悄看答案”部分的移动轨迹
     def moveWalkerAnswer(self, i, j):
         # 移动蓝点从一个格子到另一个格子离开的踪迹
         x, y = self.walker

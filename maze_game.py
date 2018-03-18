@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 # Author: Jolly_Son
-# 功能：
 
 # import tkinter as tk
 from tkinter import messagebox
@@ -16,7 +15,7 @@ class MazeGame(object):
     mz = []
     visited = []
     visited2 = []
-    star = 0
+    start = 0
     end = 0
     obj = []
     class RoomSet(object):
@@ -43,7 +42,7 @@ class MazeGame(object):
             self.coll.clear()
 
     def __init__(self, field, x, y):
-        sys.setrecursionlimit(1000000)  # 例如这里设置为一百万
+        sys.setrecursionlimit(1000000)  # 例如这里设置为一百万，更改系统递归深度
         self.field_height = x
         self.field_width = y
         self.walker = (0,0)
@@ -60,10 +59,10 @@ class MazeGame(object):
         self.disp = maze_graphics.MazeGraphics(field, x, y)
 
     def clearGame(self):
-        # 清除游戏
-
-        self.star = 0
+        # 清除计时
+        self.start = 0
         self.end = 0
+        # 清除游戏
         self.walker = (0,0)
         self.disp.setWalker(0, 0)
         self.disp.clear()
@@ -135,7 +134,6 @@ class MazeGame(object):
 
     def drawGame(self):
         # 产生迷宫
-
         # 选择一个开始点并且标记为已经访问过
         col = random.randint(0, self.field_width - 1)
         row = random.randint(0, self.field_height - 1)
@@ -191,14 +189,15 @@ class MazeGame(object):
         self.disp.setGoal(row, col)
 
     def move(self, mv):
-        if self.star is 0:
-            self.star = time.time()
+        # 游戏开始只要走动小点，视为游戏开始并存入开始时间
+        if self.start is 0:
+            self.start = time.time()
 
-        if (self.end - self.star) >= 10:
+        if (self.end - self.start) >= 10:
             messagebox.showerror("超时！", "对不起，您已经超时了！别气馁，下次继续努力！可以点击窗口下方\"悄悄看答案\"哦。")
 
-        # global end
-        self.end = time.time()
+        self.end = time.time() # 每次走动刷新一次结束计时
+
         # 移动那个会动的小蓝点
         r, c = self.walker # from where
         # print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
@@ -206,46 +205,46 @@ class MazeGame(object):
         self.visited2.append(self.walker)
         if mv == 'U': # 向上移动
             if self.mz[r][c].hasWall(maze_room.U_WALL):
-                messagebox.showerror("你撞南墙了！", "你是不撞南墙不回头？")
-                global flag
-                flag = 1
-                pass # 不能移动，这里有墙
+                messagebox.showerror("你撞墙了！", "你是不撞北墙不回头？")
+                # 不能移动，这里有墙
             else:
                 x, y = self.exit # 如果我们在这个出口的前面
                 if (x == r) and (y == c):
                     # 不能移动，但是会通知你你已经走出迷宫...
                     messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！")
                     return False # ... 并且等待游戏
+
                 # 或者，移动作为命令
                 self.walker = (r - 1, c)
                 self.disp.moveWalker(r - 1, c)
+
         elif mv == 'D': # 向下移动
             if self.mz[r][c].hasWall(maze_room.D_WALL):
-                messagebox.showerror("你撞南墙了！","你是不撞南墙不回头？")
-                return
+                messagebox.showerror("你撞墙了！","你是不撞南墙不回头？")
             else:
                 self.walker = (r + 1, c)
                 self.disp.moveWalker(r + 1, c)
+
         elif mv == 'L': # 向左移动
             if self.mz[r][c].hasWall(maze_room.L_WALL):
-                messagebox.showerror("你撞南墙了！", "你是不撞南墙不回头？")
-                pass
+                messagebox.showerror("你撞墙了！", "你是不撞西墙不回头？")
             else:
                 self.walker = (r, c - 1)
                 self.disp.moveWalker(r, c - 1)
+
         elif mv == 'R': # 向右移动
             if self.mz[r][c].hasWall(maze_room.R_WALL):
-                messagebox.showerror("你撞南墙了！", "你是不撞南墙不回头？")
-                pass
+                messagebox.showerror("你撞墙了！", "你是不撞东墙不回头？")
             else:
                 self.walker = (r, c + 1)
                 self.disp.moveWalker(r, c + 1)
+
         return False # 寻求迷宫出口仍在继续
 
     def auto(self,x,y):
         r, c = self.walker  # 从哪里开始的
         xx, yy = self.exit
-        print('起点x y:',r,c,'终点x y:',xx,yy)
+        print('起点坐标 x、y:',r,c,'终点坐标x、y:',xx,yy)
         # exit()
         self.answer(r, c, x, y)
 
@@ -256,8 +255,8 @@ class MazeGame(object):
 
         if (xx == x1) and (yy == y1):
             found = True
-            print(self.visited)
-            print(self.visited2)
+            print("您的操作路径：",self.visited)
+            print("机器继续完成的路径：",self.visited2)
 
         if found == True:
             messagebox.showinfo("机器自动尝试的路径！", self.visited2)
