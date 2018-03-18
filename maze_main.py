@@ -5,6 +5,9 @@
 import random
 from tkinter import *
 import tkinter as tk
+
+import time
+
 import maze_game
 import maze_graphics
 
@@ -21,21 +24,26 @@ class Application(tk.Frame):
         self.field = self.createWidgets(x, y)
         self.game = maze_game.MazeGame(self.field, self.x-2, self.y-2)
         self.playGame()
-        
+
+
     def createWidgets(self, x, y):
         yy = y * maze_graphics.ROOM_WIDTH_IN_PIX
         xx = x * maze_graphics.ROOM_HEIGHT_IN_PIX
         field = tk.Canvas(self, width=yy, height=xx, background=maze_graphics.BGC)
         field.grid()
         # print("Canvas: xx=", xx, " yy=", yy, " w=", field.winfo_reqwidth(), " h=", field.winfo_reqheight())
+
+
+        self.textLabel = tk.Label(self, text="请在30s内完成游戏")
+        self.textLabel.grid()
+        self.textLabel = tk.Label(self, text="使用'↑' '↓' '←' '→'进行游戏，蓝点是入口，红点是出口处")
+        self.textLabel.grid()
         self.quitButton = tk.Button(self, text='不想玩了', command=self.stopGame)
         self.quitButton.grid()
         self.quitButton = tk.Button(self, text='重开一盘', command=self.playGame)
         self.quitButton.grid()
         self.quitButton = tk.Button(self, text='悄悄看看答案', command=self.answer)
         self.quitButton.grid()
-        self.textLabel = tk.Label(self, text="使用'↑' '↓' '←' '→'进行游戏，蓝点是入口，红点是出口处")
-        self.textLabel.grid()
         return field
 
     def addHandler(self, field):
@@ -137,9 +145,9 @@ generate = tk.Button(window,text='生成迷宫',width=50,height=50,command=gener
 tips = tk.Label(text="推荐迷宫 10*10 或 15*15 ")
 tips.pack()
 window.mainloop()
-
 app = Application()
 app.master.title('Maze-迷宫小游戏 v1.0')
+
 app.mainloop()
 
 window.destroy() # 某些 IDEs 需要这个

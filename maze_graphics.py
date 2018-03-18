@@ -74,11 +74,17 @@ class MazeGraphics(object):
         def setWalker(self):
             self.field.itemconfigure(self.wlk, fill=BBB)
 
+        def setWalkerAnswer(self):
+            self.field.itemconfigure(self.wlk, fill=GGG)
+
         def clearWalker(self):
             self.field.itemconfigure(self.wlk, fill=BGC)
 
         def markWalker(self):
             self.field.itemconfigure(self.wlk, fill=LGB)
+
+        def markWalkerAnswer(self):
+            self.field.itemconfigure(self.wlk, fill=GGG)
 
         def markVisited(self):
             # 为了 debugging
@@ -181,7 +187,7 @@ class MazeGraphics(object):
         self.mz[x][y].clearWalker()
         self.mz[i][j].setWalker()
         self.walker = (i, j)
-        
+
     def moveWalker(self, i, j):
         # 移动蓝点从一个格子到另一个格子离开的踪迹
         x, y = self.walker
@@ -192,4 +198,16 @@ class MazeGraphics(object):
 
         self.mz[x][y].markWalker()
         self.mz[i][j].setWalker()
+        self.walker = (i, j)
+
+    def moveWalkerAnswer(self, i, j):
+        # 移动蓝点从一个格子到另一个格子离开的踪迹
+        x, y = self.walker
+
+        ###############  踪迹测试
+        #print("graph: walker = ", self.walker, " to ", (i ,j))
+        #self.mz[x][y].clearWalker()
+
+        self.mz[x][y].markWalkerAnswer()
+        self.mz[i][j].setWalkerAnswer()
         self.walker = (i, j)

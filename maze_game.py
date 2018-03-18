@@ -15,6 +15,9 @@ class MazeGame(object):
     DEBUG = 0
     mz = []
     visited = []
+    visited2 = []
+    star = 0
+    end = 0
     class RoomSet(object):
         # A helper - 'ordered' set with random pop
         def __init__(self):
@@ -45,6 +48,7 @@ class MazeGame(object):
         self.walker = (0,0)
         self.Walker = (0,0)
         self.field = field
+
         # 建立迷宫 - 数组的方格
         for i in range(0, x):
             self.mz.append([]) # 增加一行
@@ -183,12 +187,24 @@ class MazeGame(object):
         self.disp.setGoal(row, col)
 
     def move(self, mv):
+        self.visited2.append(self.walker)
+        if self.star is 0:
+            self.star = time.time()
+        global end
+        end = time.time()
+        # print("移动的end：",end)
+        # print("移动的star：",self.star)
+        # print("结果：",end - self.star)
+        if (end - self.star) >= 10:
+            messagebox.showerror("超时！", "对不起，您已经超时了！别气馁，下次继续努力！可以点击窗口下方\"悄悄看答案\"哦。")
+
         # 移动那个会动的小蓝点
         r, c = self.walker # from where
         # print("room ",r,c," = ", hex(self.mz[r][c].getRoom()))
         # 根据玩家的命令尝试移动到任何地方
         if mv == 'U': # 向上移动
             if self.mz[r][c].hasWall(maze_room.U_WALL):
+                messagebox.showerror("你撞南墙了！", "你是不撞南墙不回头？")
                 global flag
                 flag = 1
                 pass # 不能移动，这里有墙
@@ -203,18 +219,21 @@ class MazeGame(object):
                 self.disp.moveWalker(r - 1, c)
         elif mv == 'D': # 向下移动
             if self.mz[r][c].hasWall(maze_room.D_WALL):
-                pass
+                messagebox.showerror("你撞南墙了！","你是不撞南墙不回头？")
+                return
             else:
                 self.walker = (r + 1, c)
                 self.disp.moveWalker(r + 1, c)
         elif mv == 'L': # 向左移动
             if self.mz[r][c].hasWall(maze_room.L_WALL):
+                messagebox.showerror("你撞南墙了！", "你是不撞南墙不回头？")
                 pass
             else:
                 self.walker = (r, c - 1)
                 self.disp.moveWalker(r, c - 1)
         elif mv == 'R': # 向右移动
             if self.mz[r][c].hasWall(maze_room.R_WALL):
+                messagebox.showerror("你撞南墙了！", "你是不撞南墙不回头？")
                 pass
             else:
                 self.walker = (r, c + 1)
@@ -235,16 +254,17 @@ class MazeGame(object):
 
         if (xx == x1) and (yy == y1):
             found = True
+            print(self.visited)
 
         if found == True:
-            messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！即将在5秒后提示退出。")
-            time.sleep(5)
+            v = self.visited
+            obj = self.visited2.extend(v)
+            print(type(obj))
+            messagebox.showinfo("机器自动尝试的路径！", obj)
+            messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！即将在1秒后提示退出。")
+            time.sleep(1)
             messagebox.showwarning("成功破获迷宫", "点击ok退出！")
             exit()
-
-        print(self.visited)
-        print(found)
-        print('*******',x, y, xx, yy)
 
         up = self.mz[x1][y1].noWall(maze_room.U_WALL)
         down = self.mz[x1][y1].noWall(maze_room.D_WALL)
@@ -257,24 +277,24 @@ class MazeGame(object):
         if (not found) and (i - 1 >= 0) and (up) and ((i - 1, j) not in self.visited):
             print('往上走')
             self.walker = (i - 1, j)
-            self.disp.moveWalker(i - 1, j)
+            self.disp.moveWalkerAnswer(i - 1, j)
             self.answer(i - 1, j, x, y)
 
         if (not found) and (i + 1 <= x+1) and (down) and ((i + 1, j) not in self.visited):
             print('往下走')
             self.walker = (i + 1, j)
-            self.disp.moveWalker(i + 1, j)
+            self.disp.moveWalkerAnswer(i + 1, j)
             self.answer(i + 1, j, x, y)
 
         if (not found) and (j - 1 >= 0) and (left) and ((i, j - 1) not in self.visited):
             print('往左走')
             self.walker = (i, j - 1)
-            self.disp.moveWalker(i, j - 1)
+            self.disp.moveWalkerAnswer(i, j - 1)
             self.answer(i, j- 1, x, y)
 
         if (not found) and (j + 1 <= y+1) and (right) and ((i, j + 1) not in self.visited):
             print('往右走')
             self.walker = (i ,j + 1)
-            self.disp.moveWalker(i, j + 1)
+            self.disp.moveWalkerAnswer(i, j + 1)
             self.answer(i, j + 1, x, y)
         return found
