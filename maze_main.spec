@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['maze_main.py'],
-             pathex=['G:\\Python\\code\\maze'],
+             pathex=['G:\\Python\\code\\maze\\maze\\maze'],
              binaries=[],
              datas=[],
              hiddenimports=[],

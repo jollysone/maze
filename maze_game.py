@@ -266,7 +266,7 @@ class MazeGame(object):
             print("机器继续完成的路径：",self.visited2)
 
         if found == True:
-            messagebox.showwarning("小提示","你已经用掉了最后的机会，去休息一会儿再来吧！\n\n看完答案后点击\"确定\"退出！")
+            messagebox.showwarning("小提示","您只有一次看答案的机会，单击\"确定\"游戏将退出！")
             time.sleep(1)
             return
 
