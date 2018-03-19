@@ -2,22 +2,21 @@
 # -*- coding: utf-8 -*-
 # Author: Jolly_Son
 
-# import tkinter as tk
 from tkinter import messagebox
 import random
 import time
-import sys
 import maze_room
 import maze_graphics
 
 class MazeGame(object):
     DEBUG = 0
     mz = []
-    visited = []
-    visited2 = []
-    start = 0
-    end = 0
-    obj = []
+    visited = []  # 记录机器走迷宫的路径
+    visited2 = []  # 记录手动走迷宫的路径
+    start = 0      # 记录游戏开始的时间戳
+    end = 0       # 记录游戏结束的时间戳
+
+    # 小蓝点对象
     class RoomSet(object):
         # A helper - 'ordered' set with random pop
         def __init__(self):
@@ -42,7 +41,6 @@ class MazeGame(object):
             self.coll.clear()
 
     def __init__(self, field, x, y):
-        sys.setrecursionlimit(1000000)  # 例如这里设置为一百万，更改系统递归深度
         self.field_height = x
         self.field_width = y
         self.walker = (0,0)
@@ -70,6 +68,7 @@ class MazeGame(object):
             for j in range(0, self.field_width):
                 self.mz[i][j].clear()
 
+    # 格子的迷宫边框和路径形成的算法
     def addToFront(self, front, room):
         # Adds the neighbouring non-visited rooms to the front set
         r, c = room
@@ -87,6 +86,7 @@ class MazeGame(object):
                 front.add((r, c + 1))
         return front
 
+    # 打破一条可以走通的路径
     def breakWall(self, r, c):
         # 从两条边之间选择一个可能出去的地方并且打破它
         # 创建一个可能的墙然后去打破它
@@ -132,6 +132,7 @@ class MazeGame(object):
         if self.DEBUG >= 1:
             print("Clear breakable: size = ", breakable.len())
 
+    # 绘制迷宫
     def drawGame(self):
         # 产生迷宫
         # 选择一个开始点并且标记为已经访问过
@@ -188,12 +189,14 @@ class MazeGame(object):
         # 显示小红色的终点
         self.disp.setGoal(row, col)
 
+    # 手动走迷宫的函数
     def move(self, mv):
         # 游戏开始只要走动小点，视为游戏开始并存入开始时间
         if self.start is 0:
             self.start = time.time()
 
-        if (self.end - self.start) >= 10:
+        # 判断大于等于30s为超时
+        if (self.end - self.start) >= 30:
             messagebox.showerror("超时！", "对不起，您已经超时了！别气馁，下次继续努力！可以点击窗口下方\"悄悄看答案\"哦。")
 
         self.end = time.time() # 每次走动刷新一次结束计时
@@ -241,6 +244,7 @@ class MazeGame(object):
 
         return False # 寻求迷宫出口仍在继续
 
+    # 自动走迷宫
     def auto(self,x,y):
         r, c = self.walker  # 从哪里开始的
         xx, yy = self.exit
@@ -248,27 +252,28 @@ class MazeGame(object):
         # exit()
         self.answer(r, c, x, y)
 
+    # 自动走迷宫得到答案的具体递归代码
+    # 递归的“核心”代码
     def answer(self,i,j,x,y):
         x1, y1 = self.walker #当前点所在位置 (0,7)
         xx, yy = self.exit  # 结束的出口前面(9,3)
         found = None
 
+        # 走到结束出口，也就是小蓝点位置和出口位置一样了，找到的标志位 found = True
         if (xx == x1) and (yy == y1):
             found = True
             print("您的操作路径：",self.visited)
             print("机器继续完成的路径：",self.visited2)
 
         if found == True:
-            messagebox.showinfo("机器自动尝试的路径！", self.visited2)
-            messagebox.showinfo("恭喜你！", "您已经成功走出迷宫！即将在1秒后提示退出。")
+            messagebox.showwarning("小提示","你已经用掉了最后的机会，去休息一会儿再来吧！\n\n看完答案后点击\"确定\"退出！")
             time.sleep(1)
-            messagebox.showwarning("成功破获迷宫", "点击ok退出！")
-            exit()
+            return
 
-        up = self.mz[x1][y1].noWall(maze_room.U_WALL)
-        down = self.mz[x1][y1].noWall(maze_room.D_WALL)
-        left = self.mz[x1][y1].noWall(maze_room.L_WALL)
-        right = self.mz[x1][y1].noWall(maze_room.R_WALL)
+        up = self.mz[x1][y1].noWall(maze_room.U_WALL)  # 向上走没有墙 noWall
+        down = self.mz[x1][y1].noWall(maze_room.D_WALL) # 向下走没有墙
+        left = self.mz[x1][y1].noWall(maze_room.L_WALL)  # 向左走没有墙
+        right = self.mz[x1][y1].noWall(maze_room.R_WALL)  # 向右走没有墙
 
         if (not found):
             self.visited.append(self.walker)
@@ -276,9 +281,9 @@ class MazeGame(object):
 
         if (not found) and (i - 1 >= 0) and (up) and ((i - 1, j) not in self.visited):
             print('往上走')
-            self.walker = (i - 1, j)
-            self.disp.moveWalkerAnswer(i - 1, j)
-            self.answer(i - 1, j, x, y)
+            self.walker = (i - 1, j)    #  格子代码走了一步
+            self.disp.moveWalkerAnswer(i - 1, j)   #  格子在界面上的显示走了一步
+            self.answer(i - 1, j, x, y)  # 又递归调用一次代码，直到走出去的时候标志位为True时结束
 
         if (not found) and (i + 1 <= x+1) and (down) and ((i + 1, j) not in self.visited):
             print('往下走')
@@ -297,4 +302,5 @@ class MazeGame(object):
             self.walker = (i ,j + 1)
             self.disp.moveWalkerAnswer(i, j + 1)
             self.answer(i, j + 1, x, y)
+
         return found

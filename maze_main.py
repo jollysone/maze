@@ -23,31 +23,51 @@ class Application(tk.Frame):
         self.game = maze_game.MazeGame(self.field, self.x-2, self.y-2)
         self.playGame()
 
-
     def createWidgets(self, x, y):
         # 创建图形化界面的一部分
+        # 设置迷宫宽高
         yy = y * maze_graphics.ROOM_WIDTH_IN_PIX
         xx = x * maze_graphics.ROOM_HEIGHT_IN_PIX
+
+        # 先设置整个 窗口 为白色背景 maze_graphics.BGC
         field = tk.Canvas(self, width=yy, height=xx, background=maze_graphics.BGC)
         field.grid()
         # print("Canvas: xx=", xx, " yy=", yy, " w=", field.winfo_reqwidth(), " h=", field.winfo_reqheight())
 
-        self.textLabel = tk.Label(self, text="请在30s内完成游戏")
+        # 迷宫界面中间的 “游戏规则” 标签 Label
+        self.textLabel = tk.Label(self, font=("微软雅黑",11), fg='blue',text="游戏规则：１．蓝点是入口，红点是出口处　　　　 ")
         self.textLabel.grid()
-        self.textLabel = tk.Label(self, text="使用'↑' '↓' '←' '→'进行游戏，蓝点是入口，红点是出口处")
+        self.textLabel = tk.Label(self, font=("微软雅黑",11), fg='blue',text="         ２．使用'↑' '↓' '←' '→'进行游戏　　")
         self.textLabel.grid()
-        self.quitButton = tk.Button(self, text='悄悄看答案', command=self.answer)
-        self.quitButton.grid()
-        self.quitButton = tk.Button(self, text='重开一盘', command=self.playGame)
-        self.quitButton.grid()
-        self.quitButton = tk.Button(self, text='不想玩了', command=self.stopGame)
-        self.quitButton.grid()
-        return field
+        self.textLabel = tk.Label(self, font=("微软雅黑",11), fg='blue',text="　　　　　３．请在30s内完成游戏　　　　　　　　")
+        self.textLabel.grid()
+        self.textLabel = tk.Label(self, font=("微软雅黑",11), fg='blue',text="　　　　４．您只拥有一次看答案的机会      　　")
+        self.textLabel.grid()
+        self.textLabel = tk.Label(self, text=" ")
+        self.textLabel.grid()
+
+        # 下方的四个功能按钮 Button，通过Frame开辟一个空间，再往里面打包（.pack）放进去 ，再设置 side='left'
+        fm = Frame(height=30, width=180)
+        fm1 = Frame(fm, height=30, width=60)
+        fm2 = Frame(fm, height=30, width=60)
+        fm3 = Frame(fm, height=30, width=60)
+        fm4 = Frame(fm, height=30, width=60)
+        fm.grid(row=2)
+        fm1.pack(side='left')
+        fm2.pack(side='left')
+        fm3.pack(side='left')
+        fm4.pack(side='right')
+        Button(fm1, text="悄悄看答案",width=10, command=self.answer).pack(side='left')
+        Button(fm2, text="开始游戏", width=10).pack(side='left')
+        Button(fm3, text="再来一次", width=10,command=self.playGame).pack(side='left')
+        Button(fm4, text="退出游戏", width=10,command=self.stopGame).pack(side='right')
+        return field  # 返回整个界面上的内容，整个领域
 
     def addHandler(self, field):
         # 添加一个按键处理
         seq = '<Any-KeyPress>'
         field.bind_all(sequence=seq, func=self.handleKey, add=None)
+        # messagebox.showinfo("小提示！", "请在30秒内完成游戏！")
         
     def initGame(self):
         # 设置游戏初始化
@@ -57,14 +77,16 @@ class Application(tk.Frame):
     def answer(self):
         #  “悄悄看答案”部分
         self.game.auto(x,y)
+        self.stopGame()
 
     def stopGame(self):
         # 杀死这个应用
         self.done = True
+        app.destroy()
         self.quit()
 
     def handleKey(self, event):
-        # 按键处理程序
+        # 按键处理程序，获取键盘上的上下左右按键
         if False:
             print("handleKey: ", event.keysym, event.keycode, event.keysym_num)
         mv = None
@@ -98,23 +120,27 @@ class Application(tk.Frame):
         if self.game.move(mv):
             # Solved - exit the program
             self.stopGame()
-            
+
     def playGame(self):
         # 开始游戏
         self.initGame()
         self.addHandler(self.field)
 
+    def protocol(self, param, closeWindow):
+        # 添加此函数跳到一个空函数（closeWindow）后解决关闭窗口报错问题
+        pass
+
 def generateMaze():
     # 产生迷宫
     global x,y
-    if width.get()=='' or height.get()=='':
+    if width.get() is '' or height.get() is '': # 规模框里不输入任何东西则执行默认规模10*10
         y,x = 12,12
     else:
         y = int(width.get())+2
         x = int(height.get())+2
-    window.destroy()
+    window.destroy()  # 产生完成迷宫窗口后关闭 第一个设置迷宫规模的窗口window 对象
 
-# 设置规模时 使输入框只能输入数字的模块相关的
+# 设置规模时 使输入框只能输入“数字”的模块相关的
 def test(content): #如果你不加上==""的话，你就会发现删不完。总会剩下一个数字
     if content.isdigit() or (content==""):
         return True
@@ -125,7 +151,7 @@ def test(content): #如果你不加上==""的话，你就会发现删不完。�
 # 设置规模窗口的部分
 window = tk.Tk()
 window.title('DIY 我的迷宫！')
-window.geometry('500x255')
+window.geometry('450x255')
 v1 = StringVar()
 v2 = StringVar()
 v1.set('10')
@@ -142,14 +168,21 @@ width.pack()
 heightLabel = tk.Label(text="设置迷宫宽:").pack()
 height = tk.Entry(window,show=None,textvariable=v2,validate='key',validatecommand=(testCMD,'%P'))
 height.pack()
-tk.Label(fg='red',font=("微软雅黑",10),text="推荐迷宫 10*10 最大宽高最好不要超过12以免显示超出显示屏 ").pack()
-generate = tk.Button(window,text='生成迷宫',width=18,height=10,command=generateMaze).pack()
+tk.Label(text="  ").pack()
+generate = tk.Button(window,text='生 成 迷 宫',width=11,height=1,command=generateMaze).pack()
+tk.Label(text="  ").pack()
+tk.Label(fg='blue',font=("微软雅黑",10),text="推荐迷宫 10*10 ").pack()
+tk.Label(fg='blue',font=("微软雅黑",10),text="最大宽高最好不要超过12以免显示超出显示屏  ").pack()
 window.mainloop()
 
 # 正式运行整个迷宫窗口的部分
+def closeWindow():
+    return
+
 app = Application()
 app.master.title('Maze-迷宫小游戏 v1.0')
-
+app.protocol('WM_DELETE_WINDOW', closeWindow) # 添加此句跳到一个空函数（closeWindow）后解决关闭窗口报错问题
 app.mainloop()
 
-window.destroy() # 某些 IDEs 需要这个
+# window.destroy() # 某些 IDEs 需要这个
+# app.destroy()
