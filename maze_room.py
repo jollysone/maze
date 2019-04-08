@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Author: Jolly_Son
+# Author: jollysone@gmail.com
 # 功能：迷宫的小格子
 
 U_WALL = 1

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Author: Jolly_Son
+# Author: jollysone@gmail.com
 
 from tkinter import messagebox
 import random

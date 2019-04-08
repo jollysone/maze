@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Author: Jolly_Son
+# Author: jollysone@gmail.com
 # 功能：主程序，包括按键处理等
 
 from tkinter import *

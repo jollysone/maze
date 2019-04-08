@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Author: Jolly_Son
+# Author: jollysone@gmail.com
 # 功能：迷宫绘制
 
 # import tkinter as tk
